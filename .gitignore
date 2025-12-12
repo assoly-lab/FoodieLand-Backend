@@ -1,0 +1,9 @@
+node_modules
+src/public/upload
+src/logs
+.env
+src/uploads/
+src/logs/combined.log
+src/logs/error.log
+uploads/
+upload/
