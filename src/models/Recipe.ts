@@ -6,23 +6,32 @@ import {
 } from "@/interfaces/Recipe.interface";
 import { model, Schema } from "mongoose";
 
-export const NutritionSchema = new Schema<Nutrition>({
-  calories: Number,
-  carbohydrate: Number,
-  cholesterol: Number,
-  protein: Number,
-  totalFat: Number,
-});
+export const NutritionSchema = new Schema<Nutrition>(
+  {
+    calories: Number,
+    carbohydrate: Number,
+    cholesterol: Number,
+    protein: Number,
+    totalFat: Number,
+  },
+  { _id: false },
+);
 
-export const IngredientSectionSchema = new Schema<Ingredient>({
-  title: { type: String, required: true },
-  items: [{ type: String, required: true }],
-});
+export const IngredientSectionSchema = new Schema<Ingredient>(
+  {
+    title: { type: String, required: true },
+    items: [{ type: String, required: true }],
+  },
+  { _id: false },
+);
 
-const DirectionSchema = new Schema<DirectionStep>({
-  order: { type: Number, required: true },
-  text: { type: String, required: true },
-});
+const DirectionSchema = new Schema<DirectionStep>(
+  {
+    order: { type: Number, required: true },
+    text: { type: String, required: true },
+  },
+  { _id: false },
+);
 
 export const RecipeSchema = new Schema<RecipeInterface>(
   {
@@ -32,11 +41,13 @@ export const RecipeSchema = new Schema<RecipeInterface>(
       ref: "Category",
       required: [true, "Category is required"],
     },
-    secondaryCategories: [{
-      type: Schema.Types.ObjectId,
-      ref: "Category",
-      required: [true, "Category is required"],
-    }],
+    secondaryCategories: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Category",
+        required: [true, "Category is required"],
+      },
+    ],
     author: {
       name: { type: String, required: true },
       avatar: { type: String },

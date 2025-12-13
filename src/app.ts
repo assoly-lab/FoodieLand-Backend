@@ -14,7 +14,6 @@ import { errorHandler } from '@/middlewares/errorhandler.middleware';
 
 dotenv.config();
 
-// Connect to MongoDB
 connectDB()
   .then(async () => {
     // Initialize default roles after connection
@@ -49,7 +48,6 @@ const corsOptions = {
 };
 
 const app = express();
-const port = process.env.PORT || 3001;
 
 app.use(
   helmet({
@@ -64,19 +62,21 @@ app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 app.use(cookieParser()); // Parse cookies
 app.use(rateLimiter()); // Rate limiting
 
-// Ensure uploads directory exists
 const uploadsPath = path.join(__dirname, "../uploads");
 if (!fs.existsSync(uploadsPath)) {
   fs.mkdirSync(uploadsPath, { recursive: true });
 }
 
-// Create information-sharing directory if it doesn't exist
 const recipesPath = path.join(uploadsPath, "/recipes");
 if (!fs.existsSync(recipesPath)) {
   fs.mkdirSync(recipesPath, { recursive: true });
 }
 
-// Create information-sharing directory if it doesn't exist
+const categoriesPath = path.join(uploadsPath, "/categories");
+if (!fs.existsSync(recipesPath)) {
+  fs.mkdirSync(recipesPath, { recursive: true });
+}
+
 const avatarsPath = path.join(uploadsPath, "/avatars");
 if (!fs.existsSync(avatarsPath)) {
   fs.mkdirSync(avatarsPath, { recursive: true });
@@ -84,11 +84,13 @@ if (!fs.existsSync(avatarsPath)) {
 
 // Log the paths for debugging
 console.log("Recipes images absolute path:", path.resolve(recipesPath));
+console.log("Categories images absolute path:", path.resolve(categoriesPath));
 console.log("Avatars images absolute path:", path.resolve(avatarsPath));
 
 // Log the uploads path for debugging
 console.log("Uploads directory path:", uploadsPath);
 console.log("Recipes images path:", recipesPath);
+console.log("Categories images path:", categoriesPath);
 console.log("Avatars images path:", avatarsPath);
 
 const setCorsHeaders = (req: any, res: any, next: any) => {

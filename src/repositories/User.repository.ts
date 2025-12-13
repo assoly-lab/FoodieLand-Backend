@@ -46,5 +46,10 @@ export class UserRepository {
       { new: true }
     );
   }
+  
+  async delete(id: string): Promise<boolean> {
+    const result = await User.findByIdAndDelete(id);
+    return !!result;
+  }
 
 }

@@ -1,6 +1,6 @@
 import mongoose, { Schema, model } from "mongoose";
 import bcrypt from "bcrypt";
-import jwt, { Secret } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import {
   JWT_EXPIRES_IN,
   JWT_REFRESH_EXPIRES_IN,
@@ -65,14 +65,12 @@ const userSchema = new Schema<UserInterface>(
   },
 );
 
-// Normalize email before saving
 userSchema.pre("save", async function () {
   if (this.email) {
     this.email = normalizeEmail(this.email);
   }
 });
 
-// Hash password before saving
 userSchema.pre("save", async function () {
   if (!this.isModified("password")) return;
 
@@ -84,7 +82,6 @@ userSchema.pre("save", async function () {
   }
 });
 
-// Compare password method
 userSchema.methods.comparePassword = async function (
   candidatePassword: string,
 ): Promise<boolean> {
@@ -96,7 +93,6 @@ userSchema.methods.comparePassword = async function (
   }
 };
 
-// Generate JWT token
 userSchema.methods.generateAuthToken = function (): string {
   return jwt.sign(
     {
@@ -110,7 +106,6 @@ userSchema.methods.generateAuthToken = function (): string {
   );
 };
 
-// Generate Refresh token
 userSchema.methods.generateRefreshToken = function (): string {
   const refreshToken = jwt.sign(
     {
