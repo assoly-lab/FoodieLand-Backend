@@ -1,4 +1,4 @@
-import { Recipe as RecipeInterface } from "@/interfaces/Recipe.interface";
+import { RecipeFilters, Recipe as RecipeInterface } from "@/interfaces/Recipe.interface";
 import { Recipe } from "@/models/Recipe";
 import { Types } from "mongoose";
 
@@ -63,8 +63,18 @@ export class RecipeRepository {
       return await Recipe.aggregate(pipeline);
   }
   
-  async findAll(): Promise<RecipeInterface[]> {
-    return await Recipe.find().populate("author mainCategory secondaryCategories");
+  async findAll(filters?: RecipeFilters): Promise<RecipeInterface[]> {
+    const query: any = {};
+    if (filters?.search) {
+      query.$or = [
+        { title: { $regex: filters.search, $options: 'i' } },
+        { description: { $regex: filters.search, $options: 'i' } }
+      ];
+    }
+    if (filters?.category) {
+      query.mainCategory = new Types.ObjectId(filters.category);
+    }
+    return await Recipe.find(query).populate("author mainCategory secondaryCategories");
   }
   
   async create(data: Partial<RecipeInterface>): Promise<RecipeInterface> {

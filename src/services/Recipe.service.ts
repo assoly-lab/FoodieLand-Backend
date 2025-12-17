@@ -1,5 +1,5 @@
 import { BadRequestError, NotFoundError } from "@/core/errors/AppErrors";
-import { DirectionStep, Recipe, RecipeImage } from "@/interfaces/Recipe.interface";
+import { DirectionStep, Recipe, RecipeFilters } from "@/interfaces/Recipe.interface";
 import { RecipeRepository } from "@/repositories/Recipe.repository";
 import { Types } from "mongoose";
 
@@ -13,8 +13,9 @@ export class RecipeService {
     this.recipeRepository = new RecipeRepository();
   }
   
-  async findAll():Promise<Recipe[]> {
-    return await this.recipeRepository.findAll();
+  async findAll(filters: RecipeFilters):Promise<Recipe[]> {
+    
+    return await this.recipeRepository.findAll(filters);
   }
   
   async findById(id: string): Promise<Recipe> {

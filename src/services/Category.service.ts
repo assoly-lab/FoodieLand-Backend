@@ -12,8 +12,8 @@ export class CategoryService {
     this.categoryRepository = new CategoryRepository();
   }
   
-  async findAll(): Promise<Category[]> {
-    return await this.categoryRepository.findAll();
+  async findAll(search: string): Promise<Category[]> {
+    return await this.categoryRepository.findAll(search);
   }
   
   async findById(id: string): Promise<Category> {

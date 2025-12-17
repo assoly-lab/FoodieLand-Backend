@@ -10,7 +10,8 @@ export class CategoryController {
 
   getAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const categories = await this.categoryService.findAll();
+      const { search } = req.query;
+      const categories = await this.categoryService.findAll(search as string);
       res.status(200).json({
         success: true,
         data: categories,

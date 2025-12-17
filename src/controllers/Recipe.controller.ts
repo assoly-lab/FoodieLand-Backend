@@ -11,7 +11,8 @@ export class RecipeController {
 
   getAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const recipes = await this.recipeService.findAll();
+      const filters = req.query;
+      const recipes = await this.recipeService.findAll(filters);
       res.status(200).json({
         success: true,
         data: recipes,

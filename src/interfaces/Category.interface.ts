@@ -13,3 +13,7 @@ export interface Category extends Document {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface CategoryFilters {
+  search?: string
+}

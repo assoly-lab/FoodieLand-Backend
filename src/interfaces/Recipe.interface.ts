@@ -58,3 +58,8 @@ export interface Recipe extends Document {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface RecipeFilters {
+  search?: string;
+  category?: string;
+}

@@ -29,8 +29,10 @@ export class CategoryRepository {
   }
   
   
-  async findAll(): Promise<CategoryInterface[]> {
-    return await Category.find();
+  async findAll(search: string): Promise<CategoryInterface[]> {
+    const query: any = {}
+    if(search) query.name = { $regex: search, $options: 'i' }
+    return await Category.find(query);
   }
   
   async update(id: string, data: Partial<CategoryInterface>): Promise<CategoryInterface | null>{
