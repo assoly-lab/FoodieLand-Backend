@@ -1,18 +1,14 @@
-// src/utils/seedDatabase.ts
-
-import mongoose, { Types } from 'mongoose';
-import fs from 'fs';
-import path from 'path';
-
 import { Category as CategoryInterface } from '@/interfaces/Category.interface';
-import { Recipe as RecipeInterface, DirectionStep } from '@/interfaces/Recipe.interface'; 
-import { User } from '@/models/User';
+import { DirectionStep } from '@/interfaces/Recipe.interface'; 
 import { Category } from '@/models/Category';
 import { Recipe } from '@/models/Recipe';
+import { UserRepository } from '@/repositories/User.repository';
+import { SystemRole } from '@/core/enumerations/RolesEnum';
 
 
 const UPLOADS_BASE_URL = "/upload";
 const HOST_URL = process.env.HOST_URL || "http://localhost:5001";
+const userRepository = new UserRepository();
 
 const seedDatabase = async () => {
   try {
@@ -22,16 +18,12 @@ const seedDatabase = async () => {
       return;
     }
     console.log('Seeding database with initial data...');
-    const adminUser = await User.findOneAndUpdate(
-      { email: "admin@digitalspeak.com" },
-      { 
-        name: "digitalspeak", 
-        email: "admin@digitalspeak.com", 
-        password: "20262026",
-        role: "ADMIN" 
-      },
-      { upsert: true, new: true }
-    );
+    const adminUser = await userRepository.create({ 
+            name: "digitalspeak", 
+            email: "admin@digitalspeak.com", 
+            password: "admin123",
+            role: SystemRole.ADMIN 
+          })
     console.log(`Seeded Admin User: ${adminUser.name}`);
     const categoryData: Partial<CategoryInterface>[] = [
       { name: 'Breakfast', description: 'Start your day right.', image: { name: '1.png', url: `${HOST_URL}${UPLOADS_BASE_URL}/categories/1.png` } },

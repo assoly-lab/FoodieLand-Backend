@@ -5,7 +5,7 @@ import compression from "compression";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import dotenv from 'dotenv';
-import { rateLimiter } from '@/middlewares/rateLimiter.middleware';
+// import { rateLimiter } from '@/middlewares/rateLimiter.middleware';
 import path from "path";
 import fs from "fs";
 import { connectDB } from '@/config/database.config';
@@ -59,7 +59,9 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(rateLimiter());
+
+//disabled the rate limiter for testing purposes
+// app.use(rateLimiter());
 
 const uploadsPath = path.join(__dirname, "../uploads");
 if (!fs.existsSync(uploadsPath)) {
@@ -175,7 +177,6 @@ app.use((req, res) => {
   });
 });
 
-// Start server
 const PORT = process.env.PORT || 5001;
 
 app.listen(PORT, () => {
