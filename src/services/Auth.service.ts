@@ -7,9 +7,11 @@ import jwt from "jsonwebtoken";
 
 
 export class AuthService {
+  private baseUrl: string;
   private userRepository: UserRepository;
   
   constructor(){
+    this.baseUrl = "upload/avatars"
     this.userRepository = new UserRepository();
   }
   
@@ -35,7 +37,7 @@ export class AuthService {
     };
   }
   
-  async register(userData: UserPayload): Promise<User> {
+  async register(userData: UserPayload, avatar: Express.Multer.File | undefined): Promise<User> {
 
     if (userData.email) {
       const userWithEmail = await this.userRepository.findByEmail(
@@ -46,7 +48,10 @@ export class AuthService {
         throw new BadRequestError("Email is already registered");
       }
     }
-    return await this.userRepository.create(userData);
+    return await this.userRepository.create({
+      ...userData,
+      ...(avatar ? { avatar: `${process.env.HOST_URL}/${this.baseUrl}/${avatar.filename}` } : {avatar: `${process.env.HOST_URL}/${this.baseUrl}/avatar.png` })
+    });
   }
   
   async login(

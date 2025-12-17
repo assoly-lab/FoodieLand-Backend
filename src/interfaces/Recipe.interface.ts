@@ -1,15 +1,23 @@
-import { Document, Schema } from "mongoose";
+import { Document, Schema, Types } from "mongoose";
 import { Category } from "@/interfaces/Category.interface";
+import { User } from "@/interfaces/User.interface";
 
 export interface Ingredient {
   title: string;
   items: string[];
 }
 
+export interface RecipeImage {
+  url: string;
+  name: string;
+}
+
+
 export interface DirectionStep {
   order: number;
-  text: string;
-  image?: string;
+  title: string;
+  description: string;
+  image?: RecipeImage;
 }
 
 export interface Nutrition {
@@ -20,19 +28,18 @@ export interface Nutrition {
   totalFat: Number,
 }
 
+
 export interface Recipe extends Document {
   title: string;
+  description: string;
   mainCategory: Schema.Types.ObjectId | Category,
   secondaryCategories: Schema.Types.ObjectId[] | Category[],
-  author: {
-    name: string;
-    avatar?: string;
-  };
+  author: Types.ObjectId | User;
   publishDate: Date;
   prepTime: number;
   cookTime: number;
   isVegan: boolean;
-  mainImage: string;
+  mainImage: RecipeImage;
   nutrition?: {
     calories: number;
     carbohydrate: number;

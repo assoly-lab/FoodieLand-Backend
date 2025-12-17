@@ -18,6 +18,9 @@ const userSchema = new Schema<UserInterface>(
       required: [true, "Full name is required"],
       trim: true,
     },
+    avatar: {
+      type: String,
+    },
     email: {
       type: String,
       unique: true,

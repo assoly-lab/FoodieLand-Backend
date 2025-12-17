@@ -1,0 +1,14 @@
+{
+  "watch": ["src"],
+  "ext": "ts,js,json",
+  "ignore": ["src/**/*.spec.ts", "src/**/*.test.ts", "node_modules", "dist", "logs"],
+  "exec": "ts-node --transpile-only --prefer-ts-exts -r tsconfig-paths/register src/app.ts",
+  "legacyWatch": true,
+  "polling": true,
+  "delay": 100,
+  "env": {
+    "NODE_ENV": "development",
+    "TS_NODE_TRANSPILE_ONLY": "true",
+    "TS_NODE_PREFER_TS_EXTS": "true"
+  }
+}

@@ -3,12 +3,17 @@ import { AuthService } from "@/services/Auth.service";
 import { NextFunction, Request, Response } from "express";
 
 export class AuthController {
-  private static authService: AuthService;
+  private authService: AuthService;
   
-  static async register(req: Request, res: Response, next: NextFunction) {
+  constructor(){
+    this.authService = new AuthService();
+  }
+  
+  register = async (req: Request, res: Response, next: NextFunction) => {
     try {
+      const avatar = req.file;
       const userData: UserPayload = req.body;
-      const user = await this.authService.register(userData);
+      const user = await this.authService.register(userData, avatar);
       res.status(201).json({
         success: true,
         data: user,
@@ -18,11 +23,11 @@ export class AuthController {
     }
   }
   
-  static async login(
+  login = async (
     req: Request,
     res: Response,
     next: NextFunction
-  ) {
+  ) => {
     try {
       const { email, password } = req.body;
       const result = await this.authService.login(
@@ -48,7 +53,7 @@ export class AuthController {
     }
   }
   
-  static async refreshToken(req: Request, res: Response, next: NextFunction) {
+  refreshToken = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { refreshToken } = req.cookies;
       if (!refreshToken) {
@@ -79,7 +84,7 @@ export class AuthController {
     }
   }
   
-  static async logout(req: Request, res: Response, next: NextFunction) {
+  logout = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { user } = req as any;
       await this.authService.logout(user.id);

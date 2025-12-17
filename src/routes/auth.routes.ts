@@ -1,13 +1,17 @@
 import { AuthController } from "@/controllers/Auth.controller";
-import { validateAuth, validateLogin, validateRegister } from "@/middlewares/auth.middleware";
+import { avatarImageUpload, validateAuth, validateLogin, validateRegister } from "@/middlewares/auth.middleware";
 import express from "express";
 
 
 const router = express.Router();
 
-router.post('/register', validateRegister, AuthController.register);
-router.post('/login', validateLogin, AuthController.login);
-router.post('/refresh-token', AuthController.refreshToken);
+const authController = new AuthController();
+
+router.post('/register', avatarImageUpload, validateRegister, authController.register);
+router.post('/login', validateLogin, authController.login);
+router.post('/refresh-token', authController.refreshToken);
 
 router.use(validateAuth);
-router.post('/logout', AuthController.logout);
+router.post('/logout', authController.logout);
+
+export default router;

@@ -1,9 +1,17 @@
 import { Category as CategoryInterface } from "@/interfaces/Category.interface";
 import { Category } from "@/models/Category";
+import { RecipeService } from "@/services/Recipe.service";
+import path from "path";
+import fs from "fs"
 
 
 
 export class CategoryRepository {
+  private recipeService: RecipeService;
+
+  constructor(){
+    this.recipeService = new RecipeService();
+  }
   
   async create(data: Partial<CategoryInterface>): Promise<CategoryInterface> {
     const category = new Category(data);
@@ -20,6 +28,7 @@ export class CategoryRepository {
     return query.exec();
   }
   
+  
   async findAll(): Promise<CategoryInterface[]> {
     return await Category.find();
   }
@@ -32,8 +41,26 @@ export class CategoryRepository {
     )
   }
   
-  async delete(id: string):Promise<boolean> {
-    const result = await Category.findByIdAndDelete(id);
+  async delete(catId: string):Promise<boolean> {
+    
+    const recipesToDelete = await this.recipeService.findByCategory(catId);
+    if (recipesToDelete && recipesToDelete.length > 0) {
+      recipesToDelete.forEach((recipe) => {
+          if (recipe.mainImage?.name) {
+            const mainImagePath = path.join(__dirname, "../../uploads/recipes", recipe.mainImage.name);
+            if (fs.existsSync(mainImagePath)) fs.unlinkSync(mainImagePath);
+          }
+          recipe.directions.forEach((step) => {
+            if (step.image?.name) {
+              const stepImagePath = path.join(__dirname, "../../uploads/recipes", step.image.name);
+              if (fs.existsSync(stepImagePath)) fs.unlinkSync(stepImagePath);
+            }
+          });
+        });
+    }
+    await this.recipeService.pullSecondaryCategory(catId);
+    await this.recipeService.deleteByCategory(catId);
+    const result = await Category.findByIdAndDelete(catId);
     return !!result
   }
 }

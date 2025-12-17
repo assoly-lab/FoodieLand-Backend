@@ -7,3 +7,4 @@ src/logs/combined.log
 src/logs/error.log
 uploads/
 upload/
+logs/

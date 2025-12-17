@@ -1,27 +1,28 @@
 import { CategoryService } from "@/services/Category.service";
 import { NextFunction, Request, Response } from "express";
 
+export class CategoryController {
+  private categoryService: CategoryService;
 
+  constructor() {
+    this.categoryService = new CategoryService();
+  }
 
-export class categoryController {
-  private static categoryService: CategoryService;
-  
-  
-  static async getAll(req: Request, res: Response, next: NextFunction) {
-    try{
+  getAll = async (req: Request, res: Response, next: NextFunction) => {
+    try {
       const categories = await this.categoryService.findAll();
-      return {
+      res.status(200).json({
         success: true,
         data: categories,
-      }
-    }catch(error){
-      next(error)
+      });
+    } catch (error) {
+      next(error);
     }
   }
-  
-  static async create(req: Request, res: Response, next: NextFunction) {
+
+  create = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const file = ((req as Express.Request).file) as Express.Multer.File;
+      const file = (req as Express.Request).file as Express.Multer.File;
       const category = await this.categoryService.create(file, req.body);
 
       res.status(201).json({
@@ -32,15 +33,15 @@ export class categoryController {
       next(error);
     }
   }
-  
-  static async update(req: Request, res: Response, next: NextFunction) {
+
+  update = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { id, name, description } = req.body; 
+      const { id, name, description } = req.body;
       const payload = {
         name,
-        description
-      }
-      const file = ((req as Express.Request).file) as Express.Multer.File;
+        description,
+      };
+      const file = (req as Express.Request).file as Express.Multer.File;
       const category = await this.categoryService.update(id, file, payload);
 
       res.status(201).json({
@@ -51,8 +52,8 @@ export class categoryController {
       next(error);
     }
   }
-  
-  static async delete(req: Request, res: Response, next: NextFunction) {
+
+  delete = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
       await this.categoryService.delete(id);
@@ -65,5 +66,4 @@ export class categoryController {
       next(error);
     }
   }
-  
 }

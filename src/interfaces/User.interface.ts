@@ -7,6 +7,7 @@ export interface User extends Document {
   email: string;
   password: string;
   role: SystemRole;
+  avatar: string;
   refreshToken: string;
   createdAt: Date;
   updatedAt: Date;

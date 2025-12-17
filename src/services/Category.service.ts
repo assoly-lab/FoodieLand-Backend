@@ -4,9 +4,11 @@ import { CategoryRepository } from "@/repositories/Category.repository";
 
 
 export class CategoryService {
+  private baseUrl ;
   private categoryRepository: CategoryRepository;
   
   constructor(){
+    this.baseUrl = "upload/categories";
     this.categoryRepository = new CategoryRepository();
   }
   
@@ -43,7 +45,7 @@ export class CategoryService {
     
     const image: CategoryImage = {
       name: file.filename,
-      url: file.path
+      url: `${process.env.HOST_URL}/${this.baseUrl}/${file.filename}`
     }
     const categoryData = {
       ...data,
@@ -60,12 +62,13 @@ export class CategoryService {
     
     if(file){
       image.name = file.filename;
-      image.url = file.path
+      image.url = `${process.env.HOST_URL}/${this.baseUrl}/${file.filename}`
     }
     
     const categoryPayload = {
       ...data,
-      ...(image.name ? image : {})
+      ...(image.name ? {image: image} : {}),
+      updatedAt: new Date()
     }
     
     const category = await this.categoryRepository.update(id, categoryPayload);
